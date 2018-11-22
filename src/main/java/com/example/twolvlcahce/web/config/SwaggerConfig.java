@@ -16,7 +16,6 @@ public class SwaggerConfig {
         //Configuring Swagger 2 in the Application
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .paths(PathSelectors.any())
                 .apis(RequestHandlerSelectors.basePackage("com.example.twolvlcahce.web.controller"))
                 .build();
     }
