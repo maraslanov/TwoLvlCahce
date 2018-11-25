@@ -1,5 +1,6 @@
 package com.example.twolvlcahce.web.controller;
 
+import com.example.twolvlcahce.ClientHolder;
 import com.example.twolvlcahce.web.pojo.ClientsPojo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -8,22 +9,49 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
-@Api(description = "Операции с профилем")
+@Api(description = "Операции с кэшем")
 public class ClientController {
     private final Logger logger = LoggerFactory.getLogger(ClientController.class);
 
-    @ApiOperation(value = "Выводит данные о профиле")
+    @ApiOperation(value = "Добавляет данные в кэш")
     @RequestMapping(value = "/clients/add", method = RequestMethod.POST)
-    public ResponseEntity addClient(@RequestParam("fio") String fio, @RequestParam("adress") String adress) {
-        logger.info("add new Client:");
+    public ResponseEntity<String> addClient(@RequestParam("fio") String fio, @RequestParam("address") String adress) {
         ClientsPojo newClient = new ClientsPojo(fio,adress);
-        logger.info(newClient.getFio()+ " "+ newClient.getAdress());
-        //todo добавление в кэш
-        return new ResponseEntity<>(HttpStatus.OK);
+        ClientHolder.addToCache(newClient.getId(),newClient);
+        return new ResponseEntity<>(newClient.getId(),HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Получает данные из кэша по параметру")
+    @RequestMapping(value = "/clients/get/{id}", method = RequestMethod.GET)
+    public ResponseEntity<ClientsPojo> getClient(@PathVariable("id") String id) {
+        return new ResponseEntity<>(ClientHolder.getClientFromHolderByID(id), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Получает всех данные из в кэша")
+    @RequestMapping(value = "/clients/get", method = RequestMethod.GET)
+    public ResponseEntity<List<ClientsPojo>> getClients() {
+        return new ResponseEntity<>(ClientHolder.getClientList(), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Отчищает кэш")
+    @RequestMapping(value = "/clients/delete", method = RequestMethod.GET)
+    public ResponseEntity deleteClients() {
+        ClientHolder.clearHolder();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @ApiOperation(value = "Удаляет запись из кэша")
+    @RequestMapping(value = "/clients/delete/{id}", method = RequestMethod.POST)
+    public ResponseEntity deleteClients(@PathVariable("id") String id) {
+        ClientHolder.deleteClientByKey(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
