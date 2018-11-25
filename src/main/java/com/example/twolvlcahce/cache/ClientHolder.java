@@ -1,4 +1,4 @@
-package com.example.twolvlcahce;
+package com.example.twolvlcahce.cache;
 
 import com.example.twolvlcahce.web.pojo.ClientsPojo;
 import org.springframework.util.StringUtils;
@@ -20,7 +20,7 @@ public class ClientHolder {
         }
     }
 
-    public static ClientsPojo getClientFromHolderByID(String key) {
+    public static ClientsPojo getDataFromHolderByID(String key) {
         if (StringUtils.hasText(key)) {
             if (holder.containsKey(key)) {
                 int frequency = frequencyHolder.get(key);
@@ -31,7 +31,7 @@ public class ClientHolder {
         return null;
     }
 
-    public static void deleteClientByKey(String key) {
+    public static void deleteDataByKey(String key) {
         if (holder.containsKey(key)) {
             holder.remove(key);
             frequencyHolder.remove(key);
@@ -54,7 +54,7 @@ public class ClientHolder {
         return 0;
     }
 
-    public static List<ClientsPojo> getClientList() {
+    public static List<ClientsPojo> getDataList() {
         return new ArrayList<ClientsPojo>(holder.values());
     }
 }

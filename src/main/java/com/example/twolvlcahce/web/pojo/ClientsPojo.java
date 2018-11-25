@@ -3,11 +3,12 @@ package com.example.twolvlcahce.web.pojo;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 @Getter
 @Setter
-public class ClientsPojo {
+public class ClientsPojo implements Serializable {
     private String id;
     private String fio;
     private String address;

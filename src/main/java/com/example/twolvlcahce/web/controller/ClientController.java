@@ -1,11 +1,9 @@
 package com.example.twolvlcahce.web.controller;
 
-import com.example.twolvlcahce.ClientHolder;
+import com.example.twolvlcahce.cache.ClientHolder;
 import com.example.twolvlcahce.web.pojo.ClientsPojo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,7 +17,6 @@ import java.util.List;
 @Controller
 @Api(description = "Операции с кэшем")
 public class ClientController {
-    private final Logger logger = LoggerFactory.getLogger(ClientController.class);
 
     @ApiOperation(value = "Добавляет данные в кэш")
     @RequestMapping(value = "/clients/add", method = RequestMethod.POST)
@@ -32,13 +29,13 @@ public class ClientController {
     @ApiOperation(value = "Получает данные из кэша по параметру")
     @RequestMapping(value = "/clients/get/{id}", method = RequestMethod.GET)
     public ResponseEntity<ClientsPojo> getClient(@PathVariable("id") String id) {
-        return new ResponseEntity<>(ClientHolder.getClientFromHolderByID(id), HttpStatus.OK);
+        return new ResponseEntity<>(ClientHolder.getDataFromHolderByID(id), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Получает всех данные из в кэша")
     @RequestMapping(value = "/clients/get", method = RequestMethod.GET)
     public ResponseEntity<List<ClientsPojo>> getClients() {
-        return new ResponseEntity<>(ClientHolder.getClientList(), HttpStatus.OK);
+        return new ResponseEntity<>(ClientHolder.getDataList(), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Отчищает кэш")
@@ -51,7 +48,7 @@ public class ClientController {
     @ApiOperation(value = "Удаляет запись из кэша")
     @RequestMapping(value = "/clients/delete/{id}", method = RequestMethod.POST)
     public ResponseEntity deleteClients(@PathVariable("id") String id) {
-        ClientHolder.deleteClientByKey(id);
+        ClientHolder.deleteDataByKey(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
