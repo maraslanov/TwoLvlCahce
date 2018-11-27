@@ -1,5 +1,6 @@
 package com.example.twolvlcahce.web.controller;
 
+import com.example.twolvlcahce.cache.Cache;
 import com.example.twolvlcahce.cache.ClientHolder;
 import com.example.twolvlcahce.web.pojo.ClientsPojo;
 import io.swagger.annotations.Api;
@@ -22,14 +23,14 @@ public class ClientController {
     @RequestMapping(value = "/clients/add", method = RequestMethod.POST)
     public ResponseEntity<String> addClient(@RequestParam("fio") String fio, @RequestParam("address") String adress) {
         ClientsPojo newClient = new ClientsPojo(fio,adress);
-        ClientHolder.addToCache(newClient.getId(),newClient);
+        Cache.addData(newClient.getId(),newClient);
         return new ResponseEntity<>(newClient.getId(),HttpStatus.OK);
     }
 
     @ApiOperation(value = "Получает данные из кэша по параметру")
     @RequestMapping(value = "/clients/get/{id}", method = RequestMethod.GET)
     public ResponseEntity<ClientsPojo> getClient(@PathVariable("id") String id) {
-        return new ResponseEntity<>(ClientHolder.getDataFromHolderByID(id), HttpStatus.OK);
+        return new ResponseEntity<>(Cache.getData(id), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Получает всех данные из в кэша")

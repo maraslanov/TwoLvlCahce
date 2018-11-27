@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.UUID;
 
 public class FileHolder {
@@ -15,7 +16,7 @@ public class FileHolder {
     private static HashMap<String, String> holder = new HashMap<>();
     private static HashMap<String, Integer> frequencyHolder = new HashMap<String, Integer>();
     private static File fileFolder = new File("temp\\");
-    private static final Logger logger = LoggerFactory.getLogger(ClientController.class);
+    private static final Logger logger = LoggerFactory.getLogger(FileHolder.class);
 
     public static void addToCache(String key, ClientsPojo value) {
         String pathname = fileFolder.getAbsolutePath() + "\\" + UUID.randomUUID().toString();
@@ -26,9 +27,7 @@ public class FileHolder {
             fileStream = new FileOutputStream(pathname);
             ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
             objectStream.writeObject(value);
-            objectStream.flush();
             objectStream.close();
-            fileStream.flush();
             fileStream.close();
         } catch (FileNotFoundException e) {
             logger.error("FileHolder problem with wrong path during adding to cache");
@@ -79,6 +78,10 @@ public class FileHolder {
             frequencyHolder.remove(key);
             deletingFile.delete();
         }
+    }
+
+    public static int size() {
+        return holder.size();
     }
 }
 

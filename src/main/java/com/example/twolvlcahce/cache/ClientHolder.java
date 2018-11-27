@@ -5,6 +5,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class ClientHolder {
@@ -43,11 +44,7 @@ public class ClientHolder {
         frequencyHolder.clear();
     }
 
-    public static boolean contains(String key) {
-        return holder.containsKey(key);
-    }
-
-    public static int getFrecquencyByKey(String key) {
+    public static Integer getFrecquencyByKey(String key) {
         if (holder.containsKey(key)) {
             return frequencyHolder.get(key);
         }
@@ -56,5 +53,22 @@ public class ClientHolder {
 
     public static List<ClientsPojo> getDataList() {
         return new ArrayList<ClientsPojo>(holder.values());
+    }
+
+    public static int size() {
+        return holder.size();
+    }
+
+    public static HashSet<String> getFrequencyHolderKeys(){
+        return  new HashSet<>(frequencyHolder.keySet());
+    }
+
+    public static ClientsPojo removeDataByKey(String key) {
+        if (holder.containsKey(key)) {
+            ClientsPojo result = holder.get(key);
+            deleteDataByKey(key);
+            return result;
+        }
+        return null;
     }
 }
