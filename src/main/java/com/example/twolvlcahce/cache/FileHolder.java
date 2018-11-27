@@ -1,6 +1,6 @@
 package com.example.twolvlcahce.cache;
 
-import com.example.twolvlcahce.web.controller.ClientController;
+import com.example.twolvlcahce.CacheProperties;
 import com.example.twolvlcahce.web.pojo.ClientsPojo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,17 +8,18 @@ import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.UUID;
+
 
 public class FileHolder {
 
     private static HashMap<String, String> holder = new HashMap<>();
     private static HashMap<String, Integer> frequencyHolder = new HashMap<String, Integer>();
-    private static File fileFolder = new File("temp\\");
+
     private static final Logger logger = LoggerFactory.getLogger(FileHolder.class);
 
     public static void addToCache(String key, ClientsPojo value) {
+        File fileFolder = new File(CacheProperties.filePath);
         String pathname = fileFolder.getAbsolutePath() + "\\" + UUID.randomUUID().toString();
         frequencyHolder.put(key, 1);
         holder.put(key, pathname);
