@@ -14,14 +14,12 @@ import java.util.UUID;
 public class FileHolder {
 
     private static HashMap<String, String> holder = new HashMap<>();
-    private static HashMap<String, Integer> frequencyHolder = new HashMap<String, Integer>();
 
     private static final Logger logger = LoggerFactory.getLogger(FileHolder.class);
 
     public static void addToCache(String key, ClientsPojo value) {
         File fileFolder = new File(CacheProperties.filePath);
         String pathname = fileFolder.getAbsolutePath() + "\\" + UUID.randomUUID().toString();
-        frequencyHolder.put(key, 1);
         holder.put(key, pathname);
         FileOutputStream fileStream = null;
         try {
@@ -43,8 +41,6 @@ public class FileHolder {
             try {
                 FileInputStream fileStream = new FileInputStream(pathToObject);
                 ObjectInputStream objectStream = new ObjectInputStream(fileStream);
-                int frecquency = frequencyHolder.remove(key);
-                frequencyHolder.put(key, ++frecquency);
                 ClientsPojo deserialized = (ClientsPojo) objectStream.readObject();
 
                 fileStream.close();
@@ -70,13 +66,11 @@ public class FileHolder {
             deletingFile.delete();
         }
         holder.clear();
-        frequencyHolder.clear();
     }
 
     public static void deleteObject(String key) {
         if (holder.containsKey(key)) {
             File deletingFile = new File(holder.remove(key));
-            frequencyHolder.remove(key);
             deletingFile.delete();
         }
     }
